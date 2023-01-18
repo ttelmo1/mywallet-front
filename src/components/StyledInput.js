@@ -11,10 +11,11 @@ const StyledInput = styled.input`
   line-height: 25px;
   pointer-events: ${(props) => props.disabled ? "none" : "all"};
   background-color: ${(props) => props.disabled ? "#F2F2F2" : "#FFFFFF"};
-  color: ${(props) => props.disabled ? "#AFAFAF" : "#666666"};
+  color: ${(props) => props.disabled ? "#AFAFAF" : "#000000"};
+  
   
   &::placeholder{
-    color: #DBDBDB;
+    color: #000000;
   }
 `
 
