@@ -1,37 +1,31 @@
-import axios from "axios";
-import { useContext, useEffect, useState } from "react";
+import { useState } from "react";
 import { ThreeDots } from "react-loader-spinner";
 import { useNavigate } from "react-router-dom";
 import StyledButton from "../../components/StyledButton";
 import StyledForm from "../../components/StyledForm";
 import StyledInput from "../../components/StyledInput";
 import StyledLink from "../../components/StyledLink";
-import { UserContext } from "../../contexts/UserContext";
 import apiAuth from "../../services/apiAuth";
 import { Container } from "./styled";
 
 
-export default function LoginPage() {
-    const [form, setForm] = useState({ email: "", password: "" });
+export default function SignUpPage() {
+    const [form, setForm] = useState({ email: "", password: "", name: "" });
     const [loading, setLoading] = useState(false);
-    const { setUser } = useContext(UserContext);
     const navigate = useNavigate();
 
     function handleForm(e) {
         setForm({ ...form, [e.target.name]: e.target.value });
     }
 
-    function handleLogin(e) {
+    function handleSignUp(e) {
         e.preventDefault();
         setLoading(true);
 
-        apiAuth.login(form)
+        apiAuth.signUp(form)
             .then((response) => {
-                const { email, name } = response.data;
                 setLoading(false);
-                setUser({ email, name });
-                localStorage.setItem("user", JSON.stringify({ email, name }));
-                navigate("/home");
+                navigate("/");
             })
             .catch((error) => {
                 setLoading(false);
@@ -42,14 +36,21 @@ export default function LoginPage() {
     return (
         <Container>
             <h1>MyWallet</h1>
-            <StyledForm onSubmit={handleLogin}>
+            <StyledForm>
+                <StyledInput
+                    type="text"
+                    name="name"
+                    placeholder="Nome"
+                    value={form.name}
+                    onChange={handleForm}
+                    disabled={loading}
+                />
                 <StyledInput
                     type="email"
                     name="email"
                     placeholder="E-mail"
                     value={form.email}
                     onChange={handleForm}
-                    required
                     disabled={loading}
                 />
                 <StyledInput
@@ -58,18 +59,18 @@ export default function LoginPage() {
                     placeholder="Senha"
                     value={form.password}
                     onChange={handleForm}
-                    required
                     disabled={loading}
                 />
-                <StyledButton type="submit" disabled={loading}>
-                    {loading ? (
-                        <ThreeDots width={50} height={50} color="#FFFFFF" />
-                    ) : "Entrar"}
+                <StyledButton
+                    type="submit"
+                    onClick={handleSignUp}
+                    disabled={loading}
+                >
+                    {loading ? (<ThreeDots width={50} height={50} color="#FFFFFF" />) : "Cadastrar"}
                 </StyledButton>
-            </StyledForm>
-            <StyledLink to="/cadastro">Primeira vez? Cadastre-se!</StyledLink>
+             </StyledForm>
+
+             <StyledLink to="/">Já tem uma conta? Entre agora!</StyledLink>
         </Container>
     );
 }
-
-
