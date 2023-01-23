@@ -47,6 +47,8 @@ export const WhiteBox = styled.div`
     color: #868686;
     text-align: center;
   }
+
+  
 `
 
 export const PurpleBox = styled.div`

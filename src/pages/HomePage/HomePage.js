@@ -7,27 +7,37 @@ import apiFinances from "../../services/apiFinances";
 import { Container, PurpleBox, WhiteBox } from "./styled";
 
 export default function HomePage() {
-    const [loading, setLoading] = useState(false);
     const { user } = useContext(UserContext);
-    const { wallet, setWallet } = useContext(WalletContext);
+    const [wallet, setWallet] = useState([]);
     const navigate = useNavigate();
 
 
     useEffect(() => {
-        setLoading(true);
         apiFinances.getEntries(user.token)
             .then((response) => {
                 setWallet(response.data);
-                setLoading(false);
             })
             .catch((error) => {
-                setLoading(false);
                 console.log(error.response.data.message);
                 navigate("/");
             });
     }, []);
 
-    console.log(wallet);
+    const newWallet = [...wallet].reverse();
+
+    function sumTotal(wallet) {
+        let total = 0;
+        wallet.forEach((item) => {
+            if (item.type === "income") {
+                let valueToNumber = Number(item.value);
+                total += valueToNumber;
+            } else {
+                let valueToNumber = Number(item.value);
+                total -= valueToNumber;
+            }
+        });
+        return total;
+    }
 
     return (
         <Container>
@@ -36,7 +46,22 @@ export default function HomePage() {
                 <ion-icon name="exit-outline"></ion-icon>
             </div>
             <WhiteBox>
-                <h1>Não há registros de<br /> entrada ou saída</h1>
+                {newWallet.length === 0 ? (
+                    <h1>Não há registros de<br /> entrada ou saída</h1>
+                ) : (
+                <div className="entries">
+                    {newWallet.map((item) => (
+                    <p>
+                        {item.date} {item.description} {item.value}
+                    </p>
+                    ))}
+                <div className="total">
+                    <p>
+                        Total: {sumTotal(newWallet)}
+                    </p>
+                </div>
+                </div>
+                )}
             </WhiteBox>
             <div className="footer">
                 <PurpleBox>
@@ -48,7 +73,7 @@ export default function HomePage() {
                 <PurpleBox>
                     <ion-icon name="remove-circle-outline"></ion-icon>
                     <StyledLink to="/nova-saida">
-                        <h2>Nova saída</h2>
+                    <h2>Nova saída</h2>
                     </StyledLink>
                 </PurpleBox>
             </div>
