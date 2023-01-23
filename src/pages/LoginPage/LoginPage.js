@@ -27,9 +27,9 @@ export default function LoginPage() {
 
         apiAuth.login(form)
             .then((response) => {
-                const { email, name } = response.data;
+                const { email, name } = response.data.user;
                 setLoading(false);
-                setUser({ email, name });
+                setUser({ email, name , token: response.data.token});
                 localStorage.setItem("user", JSON.stringify({ email, name }));
                 navigate("/home");
             })

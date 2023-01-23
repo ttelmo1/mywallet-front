@@ -3,7 +3,7 @@ import axios from "axios";
 
 
 function login(body) {
-    const promise = axios.post(`${process.env.REACT_APP_API_URL}/login`, body);
+    const promise = axios.post(`${process.env.REACT_APP_API_URL}/sign-in`, body);
     return promise;
 }
 

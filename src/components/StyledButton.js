@@ -16,6 +16,7 @@ const StyledButton = styled.button`
   text-align: center;
   background: #A328D6;
   color: #FFFFFF;
+  font-weight: 700;
 `
 
 export default StyledButton
