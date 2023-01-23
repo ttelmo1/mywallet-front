@@ -48,6 +48,73 @@ export const WhiteBox = styled.div`
     text-align: center;
   }
 
+  .entries{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding-top: 20px;
+  }
+
+  .total{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding:20px;
+    font-family: 'Raleway', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: #000000;
+    
+    .total-value{
+      font-weight: 400;
+    }
+
+    }
+
+  .transaction{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    font-family: 'Raleway', sans-serif;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .date-description{
+    display: flex;
+    gap: 9px;
+
+    .date{
+      font-size: 16px;
+      font-weight: 400;
+      color: #C6C6C6;
+    }
+
+    .description{
+      font-size: 16px;
+      font-weight: 400;
+      color: #000000;
+    }
+  }
+
+
+  .value-delete{
+    display: flex;
+    gap: 9px;
+
+    .value{
+      font-size: 16px;
+      font-weight: 400;
+    }
+
+    .delete{
+      font-size: 16px;
+      font-weight: 400;
+      color: #C6C6C6;
+    }
+  }
   
 `
 

@@ -11,8 +11,9 @@ export default function HomePage() {
     const [wallet, setWallet] = useState([]);
     const navigate = useNavigate();
 
+    useEffect(getWallet, []);
 
-    useEffect(() => {
+    function getWallet(){
         apiFinances.getEntries(user.token)
             .then((response) => {
                 setWallet(response.data);
@@ -21,7 +22,7 @@ export default function HomePage() {
                 console.log(error.response.data.message);
                 navigate("/");
             });
-    }, []);
+    }
 
     const newWallet = [...wallet].reverse();
 
@@ -36,31 +37,66 @@ export default function HomePage() {
                 total -= valueToNumber;
             }
         });
-        return total;
+        return total
     }
+
+    function handleLogout() {
+        localStorage.removeItem("user");
+        navigate("/");
+    }
+
+    function handleDeleteEntry(id) {
+        apiFinances.deleteEntry(id, user.token)
+            .then((response) => {
+                console.log(response);
+                const newWallet = wallet.filter((item) => item.id !== id);
+                setWallet(newWallet);
+                getWallet();
+            })
+            .catch((error) => {
+                console.log(error.response.data.message);
+            });
+    }
+
+    console.log(sumTotal(newWallet))
 
     return (
         <Container>
             <div className="header">
                 <h1>Olá, {user.name}</h1>
-                <ion-icon name="exit-outline"></ion-icon>
+                <ion-icon 
+                onClick={handleLogout}
+                name="exit-outline"></ion-icon>
             </div>
             <WhiteBox>
                 {newWallet.length === 0 ? (
                     <h1>Não há registros de<br /> entrada ou saída</h1>
                 ) : (
+                <>
                 <div className="entries">
                     {newWallet.map((item) => (
-                    <p>
-                        {item.date} {item.description} {item.value}
-                    </p>
+                        <div className="transaction" key={item._id}>
+                            <div className="date-description"> 
+                                <p className="date">{item.date}</p>
+                                <p className="description">{item.description}</p>
+                            </div>
+                            <div className="value-delete">
+                                <p className="value"
+                                style={item.type === "income" ? {color: "#03AC00"} : {color: "#C70000"}}
+                                >{item.value}</p> 
+                                <p className="delete"><ion-icon onClick={() => handleDeleteEntry(item._id)} name="close-outline"></ion-icon></p>
+                            </div>
+                        </div>
                     ))}
+                </div>
                 <div className="total">
-                    <p>
-                        Total: {sumTotal(newWallet)}
+                    SALDO <p className="total-value"
+                    style={sumTotal(newWallet) >= 0 ? {color: "#03AC00"} : {color: "#C70000"}}
+                    >
+                        {sumTotal(newWallet) === "NaN" ? "NEGATIVO" : sumTotal(newWallet)} 
                     </p>
                 </div>
-                </div>
+                </>
                 )}
             </WhiteBox>
             <div className="footer">
@@ -80,5 +116,3 @@ export default function HomePage() {
         </Container>
     );
 }
-
-//Buscar token dentro de contexto de usuario
